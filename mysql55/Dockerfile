@@ -16,6 +16,6 @@ RUN cd ~/Download; curl -O http://www.kyngchaos.com/files/software/frameworks/GE
 
 # install python packages
 RUN pip install xmltodict shapely numpy sqlalchemy python-dateutil pyyaml simplejson pyshp scikit-learn \
-    geojson urllib3 requests xlrd pillow
+    geojson urllib3 requests xlrd pillow python-mysql mysql-connector-python
 
 EXPOSE 3306
