@@ -23,8 +23,8 @@ RUN pip install xmltodict shapely numpy sqlalchemy python-dateutil pyyaml simple
 RUN groupadd -g 120 mysql; useradd -c "MySQL Server" -d /nonexistent -g mysql -s /bin/false -u 120 mysql; \
     mkdir /db; mkdir /db/mysql; chown mysql:mysql /db/mysql; chmod 700 /db/mysql
 
-RUN curl -o mysql-5.6.deb http://cdn.mysql.com/Downloads/MySQL-5.6/mysql-5.6.21-debian6.0-x86_64.deb
-RUN dpkg -i mysql-5.6.deb
+RUN curl -o /home/Download/mysql-5.6.deb http://cdn.mysql.com/Downloads/MySQL-5.6/mysql-5.6.21-debian6.0-x86_64.deb
+RUN dpkg -i /home/Download/mysql-5.6.deb
 RUN apt-get install libaio1
 
 RUN mkdir /var/log/mysql; mkdir /var/lib/mysql; mkdir /usr/share/mysql; ln -s /opt/mysql/server-5.6/share /usr/share/mysql/share; cd /opt/mysql/server-5.6/
@@ -61,6 +61,6 @@ RUN cd /opt/mysql/server-5.6; \
 # install mysql driver for python
 RUN pip install mysql-python; pip install mysql-connector-python
 
-CMD service mysql.server start
+CMD /opt/mysql/server-5.6/bin/mysqld_safe
 
 EXPOSE 3306
