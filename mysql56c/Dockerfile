@@ -47,12 +47,13 @@ RUN cd /opt/mysql/server-5.6/; cp -p support-files/mysql.server /etc/init.d/; up
 ## Change MySQL configurations
 RUN /opt/mysql/server-5.6/scripts/mysql_install_db --user=mysql --basedir=/opt/mysql/server-5.6 --datadir=/opt/mysql/server-5.6/data --port=3306 --lc-messages-dir=/opt/mysql/server-5.6/share
 
-RUN cd /opt/mysql/server-5.6/
-RUN echo '[mysqld]' > my.cnf; echo 'basedir = /opt/mysql/server-5.6' >> my.cnf; \
+RUN cd /opt/mysql/server-5.6; \
+    echo '[mysqld]' > my.cnf; echo 'basedir = /opt/mysql/server-5.6' >> my.cnf; \
     echo 'datadir = /opt/mysql/server-5.6/data' >> my.cnf; echo 'port = 3306' >> my.cnf; \
     echo '# server_id = .....' >> my.cnf; echo '# socket = .....' >> my.cnf; \
     echo 'lc-messages-dir = /opt/mysql/server-5.6/share' >> my.cnf; \
-    echo 'innodb_file_per_table=1' >> my.cnf; echo 'innodb_buffer_pool_size = 2G  # default 128M' >> my.cnf; \
+    echo 'innodb_file_per_table=1' >> my.cnf; \
+    echo 'innodb_buffer_pool_size = 2G  # default 128M' >> my.cnf; \
     echo '# changing innodb_log_file_size requires removing the innodb log after db shutdown' >> my.cnf; \
     echo 'innodb_log_file_size = 40M  #default 5M' >> my.cnf; \
     echo '# changing innodb_data_file_path requires rebuilding databases (DID NOT RUN!!!)' >> my.cnf; \
