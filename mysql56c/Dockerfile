@@ -62,6 +62,6 @@ RUN echo '[mysqld]' > my.cnf; echo 'basedir = /opt/mysql/server-5.6' >> my.cnf; 
 # install mysql driver for python
 RUN pip install mysql-python; pip install mysql-connector-python
 
-CMD /opt/mysql/server-5.6/bin/mysql_safe
+CMD /opt/mysql/server-5.6/bin/mysqld_safe
 
 EXPOSE 3306
