@@ -27,7 +27,7 @@ RUN curl -o mysql-5.6.deb http://cdn.mysql.com/Downloads/MySQL-5.6/mysql-5.6.21-
 RUN dpkg -i mysql-5.6.deb
 RUN apt-get install libaio1
 
-RUN mkdir /var/log/mysql; mkdir /usr/share/mysql; mkdir /var/lib/mysql; cd /opt/mysql/server-5.6/
+RUN mkdir /var/log/mysql; mkdir /var/lib/mysql; mkdir /usr/share/mysql; ln -s /opt/mysql/server-5.6/share /usr/share/mysql/share; cd /opt/mysql/server-5.6/
 
 # Move MySQL base directory to volume /db/
 RUN cd /opt; rm -rf /db/mysql; mv /opt/mysql /db/; ln -s /db/mysql mysql
@@ -37,15 +37,13 @@ RUN cd /opt/mysql/server-5.6/; cp -p support-files/mysql.server /etc/init.d/; up
     export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/opt/mysql/server-5.6/bin; \
     echo 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/opt/mysql/server-5.6/bin"' >> /etc/environment;
 
-# Create root password
-#RUN service mysql.server start; mysql -u root mysql
-#UPDATE mysql.user SET Password=PASSWORD('XXXX') WHERE User='root';
-#FLUSH PRIVILEGES;
-#EXIT
-#sudo service mysql.server stop
-
 ## Change MySQL configurations
 RUN /opt/mysql/server-5.6/scripts/mysql_install_db --user=mysql --basedir=/opt/mysql/server-5.6 --datadir=/opt/mysql/server-5.6/data --port=3306 --lc-messages-dir=/opt/mysql/server-5.6/share
+
+# Create root password
+#RUN service mysql.server start; \
+#   mysql -u root mysql -p -e "UPDATE mysql.user SET Password=PASSWORD('XXXX') WHERE User='root';FLUSH PRIVILEGES"; \
+#   service mysql.server stop
 
 RUN cd /opt/mysql/server-5.6; \
     echo '[mysqld]' > my.cnf; echo 'basedir = /opt/mysql/server-5.6' >> my.cnf; \
@@ -63,6 +61,6 @@ RUN cd /opt/mysql/server-5.6; \
 # install mysql driver for python
 RUN pip install mysql-python; pip install mysql-connector-python
 
-CMD /opt/mysql/server-5.6/bin/mysqld_safe
+CMD service mysql.server start
 
 EXPOSE 3306
