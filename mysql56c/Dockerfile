@@ -28,7 +28,6 @@ RUN dpkg -i mysql-5.6.deb
 RUN apt-get install libaio1
 
 RUN mkdir /var/log/mysql; mkdir /usr/share/mysql; mkdir /var/lib/mysql; cd /opt/mysql/server-5.6/
-RUN scripts/mysql_install_db --user=mysql --basedir=/opt/mysql/server-5.6 --datadir=/opt/mysql/server-5.6/data --port=3306 --lc-messages-dir=/opt/mysql/server-5.6/share
 
 # Move MySQL base directory to volume /db/
 RUN cd /opt; rm -rf /db/mysql; mv /opt/mysql /db/; ln -s /db/mysql mysql
@@ -46,6 +45,7 @@ RUN cd /opt/mysql/server-5.6/; cp -p support-files/mysql.server /etc/init.d/; up
 #sudo service mysql.server stop
 
 ## Change MySQL configurations
+RUN /opt/mysql/server-5.6/scripts/mysql_install_db --user=mysql --basedir=/opt/mysql/server-5.6 --datadir=/opt/mysql/server-5.6/data --port=3306 --lc-messages-dir=/opt/mysql/server-5.6/share
 
 RUN cd /opt/mysql/server-5.6/
 RUN echo '[mysqld]' > my.cnf; echo 'basedir = /opt/mysql/server-5.6' >> my.cnf; \
@@ -62,6 +62,6 @@ RUN echo '[mysqld]' > my.cnf; echo 'basedir = /opt/mysql/server-5.6' >> my.cnf; 
 # install mysql driver for python
 RUN pip install mysql-python; pip install mysql-connector-python
 
-CMD mysql_safe
+CMD /opt/mysql/server-5.6/bin/mysql_safe
 
 EXPOSE 3306
