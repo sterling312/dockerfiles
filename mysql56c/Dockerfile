@@ -35,7 +35,8 @@ RUN cd /opt; rm -rf /db/mysql; mv /opt/mysql /db/; ln -s /db/mysql mysql
 # Set up MySQL service and path environment
 RUN cd /opt/mysql/server-5.6/; cp -p support-files/mysql.server /etc/init.d/; update-rc.d mysql.server defaults; \
     export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/opt/mysql/server-5.6/bin; \
-    echo 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/opt/mysql/server-5.6/bin"' >> /etc/environment;
+    echo 'PATH='$PATH':/opt/mysql/server-5.6/bin' >> /etc/environment; \
+    echo 'HOME=/home' >> /etc/environment;
 
 ## Change MySQL configurations
 RUN /opt/mysql/server-5.6/scripts/mysql_install_db --user=mysql --basedir=/opt/mysql/server-5.6 --datadir=/opt/mysql/server-5.6/data --port=3306 --lc-messages-dir=/opt/mysql/server-5.6/share
