@@ -13,7 +13,7 @@ RUN apt-get install -y git-core curl vim build-essential python-dev python-pip \
 RUN mkdir /home/Github; cd /home/Github; git clone https://github.com/s3tools/s3cmd; cd s3cmd; git checkout tags/v1.5.0-rc1; python setup.py install
 
 # geo framework software for mac
-RUN mkdir /home/Download; cd /home/Download; curl -O http://www.kyngchaos.com/files/software/frameworks/GEOS_Framework-3.4.2-3.dmg
+RUN mkdir /home/download; cd /home/download; curl -O http://www.kyngchaos.com/files/software/frameworks/GEOS_Framework-3.4.2-3.dmg
 
 # install python packages
 RUN pip install xmltodict shapely numpy sqlalchemy python-dateutil pyyaml simplejson pyshp scikit-learn \
@@ -23,8 +23,8 @@ RUN pip install xmltodict shapely numpy sqlalchemy python-dateutil pyyaml simple
 RUN groupadd -g 120 mysql; useradd -c "MySQL Server" -d /nonexistent -g mysql -s /bin/false -u 120 mysql; \
     mkdir /db; mkdir /db/mysql; chown mysql:mysql /db/mysql; chmod 700 /db/mysql
 
-RUN curl -o /home/Download/mysql-5.6.deb http://cdn.mysql.com/Downloads/MySQL-5.6/mysql-5.6.21-debian6.0-x86_64.deb
-RUN dpkg -i /home/Download/mysql-5.6.deb
+RUN curl -o /home/download/mysql-5.6.deb http://cdn.mysql.com/downloads/MySQL-5.6/mysql-5.6.21-debian6.0-x86_64.deb
+RUN dpkg -i /home/download/mysql-5.6.deb
 RUN apt-get install libaio1
 
 RUN mkdir /var/log/mysql; mkdir /var/lib/mysql; mkdir /usr/share/mysql; ln -s /opt/mysql/server-5.6/share /usr/share/mysql/share; cd /opt/mysql/server-5.6/
