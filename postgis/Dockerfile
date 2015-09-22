@@ -1,5 +1,5 @@
 # install and build postgres db and postgis on ubuntu 12.04
-FROM ubuntu:12.04
+FROM ubuntu:14.04
 
 MAINTAINER Gang Huang gang@dwellware.com
 # NOTE:
@@ -54,23 +54,6 @@ RUN /etc/init.d/postgresql -D /etc/postgresql/9.4/main &
 #    postgres psql -d dwellaware -c 'CREATE EXTENSION postgis;'; postgres psql -d dwellaware -c "CREATE EXTENSION postgis_topology;"; \
 #    postgres psql -d dwellaware -c "ALTER DATABASE dwellaware OWNER TO dwellaware;"; postgres psql -d dwellaware -f ./scripts/postgres_tables.sql
 
-# migrate property table from mysql to postgres
-#postgres psql -d dwellaware -c "COPY da_property FROM '/home/david/deploy/dwellawarers.py/property.csv' DELIMITER ',' CSV HEADER;"
-#postgres psql -d dwellaware -c 'ALTER TABLE da_property ADD COLUMN the_geog geography(POINT, 4326);'
-#postgres psql -d dwellaware -c 'UPDATE da_property SET the_geog = ST_SetSRID(ST_MakePoint(longitude, latitude), 4326);'
-#postgres psql -d dwellaware -c 'CREATE INDEX da_property_the_geog_gix ON da_property USING GIST (the_geog);'
-
-
-# migrate neighborhood table from mysql to postgres
-#postgres psql -d dwellaware -c "COPY da_neighborhood FROM '/home/david/deploy/dwellawarers.py/neighborhood.csv' DELIMITER ',' CSV HEADER;"
-#postgres psql -d dwellaware -c 'ALTER TABLE da_neighborhood ADD COLUMN the_geog geography(MULTIPOLYGON, 4326);'
-#postgres psql -d dwellaware -c "UPDATE da_neighborhood SET the_geog = ST_SetSRID(ST_Multi(ST_GeomFromGeoJSON((nbhd_data_cutout::json->'geometry')::text)), 4326);"
-#postgres psql -d dwellaware -c 'CREATE INDEX da_neighborhood_the_geog_gix ON da_neighborhood USING GIST (the_geog);'
-
-# build property_to_neighborhood table
-#postgres psql -d dwellaware -c 'INSERT into da_property_to_neighborhood (property_id, neighborhood_id) (SELECT A.id, B.id FROM da_property A INNER JOIN da_neighborhood B ON ST_Within(A.the_geog::geometry, B.the_geog::geometry));'
-#
-EXPOSE 5432
 
 CMD ["/usr/lib/postgresql/9.4/bin/postgres", "-D", "/etc/postgresql/9.4/main", "-c", "config_file=/etc/postgresql/9.4/main/postgresql.conf"]
 
